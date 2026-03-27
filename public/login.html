@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Login | Hospital Self-Service Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page-shell auth-page-shell">
+    <section class="auth-layout">
+      <div class="auth-intro">
+        <p class="eyebrow">MCOMD2SWE Group Prototype</p>
+        <h1>Welcome to the Hospital Self-Service Portal</h1>
+        <p class="subcopy">Patients can sign in to view their medical records, check doctor availability, and book appointments without needing to call reception.</p>
+        <div class="hero-badges">
+          <span class="badge">Separate login page</span>
+          <span class="badge">Patient dashboard</span>
+          <span class="badge">More appointment slots</span>
+          <span class="badge">Cleaner user journey</span>
+        </div>
+
+        <div class="info-panel card">
+          <h2>Demo access</h2>
+          <p>Use the demo patient account below to test the full system.</p>
+          <ul class="status-list compact">
+            <li>Username: <strong>amanda</strong></li>
+            <li>Password: <strong>Password123!</strong></li>
+            <li>Backend running on port 3000</li>
+          </ul>
+        </div>
+      </div>
+
+      <section class="card auth-card standalone-auth-card">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Secure access</p>
+            <h2>Patient login</h2>
+          </div>
+        </div>
+
+        <form id="loginForm" class="form-grid">
+          <label>
+            Username
+            <input type="text" id="username" placeholder="Enter username" required />
+          </label>
+          <label>
+            Password
+            <input type="password" id="password" placeholder="Enter password" required />
+          </label>
+          <button type="submit">Sign in to dashboard</button>
+        </form>
+        <p id="loginMessage" class="message" aria-live="polite"></p>
+      </section>
+    </section>
+  </main>
+
+  <script src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "hospital-self-service-portal",
+  "version": "1.0.0",
+  "description": "Prototype patient-centric hospital self-service system for MCOMD2SWE group project",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

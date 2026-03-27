@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Dashboard | Hospital Self-Service Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero slim-hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Patient area</p>
+      <h1 id="welcomeTitle">Patient dashboard</h1>
+      <p class="subcopy" id="welcomeSubtitle">Use the sections below to manage your care.</p>
+      <div class="hero-badges">
+        <span class="badge">Appointments</span>
+        <span class="badge">Records</span>
+        <span class="badge">Doctor availability</span>
+      </div>
+    </div>
+
+    <aside class="status-card compact-status-card">
+      <h2>Dashboard summary</h2>
+      <p class="small">This page combines the patient profile, appointment management, records, and live doctor availability in one place.</p>
+      <button type="button" class="secondary-btn" id="logoutButton">Log out</button>
+    </aside>
+  </header>
+
+  <main class="container dashboard-page">
+    <section class="stats-grid">
+      <article class="stat-card">
+        <span class="stat-label">Upcoming appointments</span>
+        <strong class="stat-value" id="appointmentCount">0</strong>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">Medical records</span>
+        <strong class="stat-value" id="recordCount">0</strong>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">Doctors available</span>
+        <strong class="stat-value" id="doctorCount">0</strong>
+      </article>
+    </section>
+
+    <div class="grid two-col">
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Your details</p>
+            <h2>Patient profile</h2>
+          </div>
+        </div>
+        <div id="profile"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Next visits</p>
+            <h2>Upcoming appointments</h2>
+          </div>
+        </div>
+        <div id="appointments"></div>
+      </section>
+    </div>
+
+    <div class="grid two-col">
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Health information</p>
+            <h2>Medical records</h2>
+          </div>
+        </div>
+        <div id="records"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Self-service booking</p>
+            <h2>Book an appointment</h2>
+          </div>
+        </div>
+
+        <form id="bookingForm" class="form-grid">
+          <label>
+            Doctor
+            <select id="doctorSelect" required></select>
+          </label>
+          <label>
+            Date
+            <select id="dateSelect" required></select>
+          </label>
+          <label>
+            Time slot
+            <select id="timeSelect" required></select>
+          </label>
+          <button type="submit">Book appointment</button>
+        </form>
+        <p id="bookingMessage" class="message" aria-live="polite"></p>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="section-heading split-heading">
+        <div>
+          <p class="section-kicker">Live schedule</p>
+          <h2>Doctor availability calendar</h2>
+        </div>
+        <label class="filter-wrap">
+          Filter by speciality
+          <select id="specialtyFilter">
+            <option value="all">All specialities</option>
+          </select>
+        </label>
+      </div>
+      <div id="calendar" class="calendar-grid"></div>
+    </section>
+  </main>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
