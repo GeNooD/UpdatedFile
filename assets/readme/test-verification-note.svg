@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="720" viewBox="0 0 1400 720">
+<style>
+.title { font: 700 38px DejaVu Sans, Arial, sans-serif; fill: #ebebf5; }
+.body { font: 34px DejaVu Sans, Arial, sans-serif; fill: #a5aabe; }
+</style>
+<rect width="100%" height="100%" fill="#121218"/>
+<rect x="50" y="50" width="1300" height="620" rx="26" fill="#1b1c24"/>
+<text x="90" y="110" class="title">Verification note</text>
+<text x="90" y="190" class="body">This screenshot shows the automated backend</text>
+<text x="90" y="238" class="body">test suite included in the repository.</text>
+<text x="90" y="320" class="body">I could not capture a real passing terminal run</text>
+<text x="90" y="368" class="body">inside this environment because package install</text>
+<text x="90" y="416" class="body">is blocked here, so the README labels this</text>
+<text x="90" y="464" class="body">accurately as test-suite coverage rather than</text>
+<text x="90" y="512" class="body">claiming a verified local run screenshot.</text>
+</svg>
