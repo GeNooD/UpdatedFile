@@ -12,7 +12,18 @@
 <body>
   <a href="#mainContent" class="skip-link">Skip to main content</a>
 
-  <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">🌙</button>
+  <nav class="site-nav" aria-label="Site navigation">
+    <a href="/dashboard.html" class="nav-brand" aria-label="NHS Patient Portal home">
+      <span class="nav-brand-icon" aria-hidden="true">🏥</span>
+      <span class="nav-brand-text">
+        <span class="nav-brand-name">NHS Patient Portal</span>
+        <span class="nav-brand-sub">Hospital Self-Service</span>
+      </span>
+    </a>
+    <div class="nav-actions">
+      <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">🌙</button>
+    </div>
+  </nav>
 
   <div id="liveRegion" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
 
@@ -41,15 +52,15 @@
   <main class="container dashboard-page" id="mainContent" role="main">
     <section class="stats-grid" aria-label="Dashboard statistics">
       <article class="stat-card">
-        <span class="stat-label">Upcoming appointments</span>
+        <span class="stat-label"><span aria-hidden="true">📅 </span>Upcoming appointments</span>
         <strong class="stat-value" id="appointmentCount">0</strong>
       </article>
       <article class="stat-card">
-        <span class="stat-label">Medical records</span>
+        <span class="stat-label"><span aria-hidden="true">📋 </span>Medical records</span>
         <strong class="stat-value" id="recordCount">0</strong>
       </article>
       <article class="stat-card">
-        <span class="stat-label">Doctors available</span>
+        <span class="stat-label"><span aria-hidden="true">👨‍⚕️ </span>Doctors available</span>
         <strong class="stat-value" id="doctorCount">0</strong>
       </article>
     </section>
@@ -59,7 +70,7 @@
         <div class="section-heading">
           <div>
             <p class="section-kicker">Your details</p>
-            <h2 id="profileHeading">Patient profile</h2>
+            <h2 id="profileHeading"><span aria-hidden="true">👤 </span>Patient profile</h2>
           </div>
         </div>
         <div id="profile"></div>
@@ -69,7 +80,7 @@
         <div class="section-heading">
           <div>
             <p class="section-kicker">Next visits</p>
-            <h2 id="appointmentsHeading">Upcoming appointments</h2>
+            <h2 id="appointmentsHeading"><span aria-hidden="true">📅 </span>Upcoming appointments</h2>
           </div>
         </div>
         <div id="appointments" aria-busy="false"></div>
@@ -81,7 +92,7 @@
         <div class="section-heading">
           <div>
             <p class="section-kicker">Health information</p>
-            <h2 id="recordsHeading">Medical records</h2>
+            <h2 id="recordsHeading"><span aria-hidden="true">🩺 </span>Medical records</h2>
           </div>
         </div>
         <div id="records" aria-busy="false"></div>
@@ -91,7 +102,7 @@
         <div class="section-heading">
           <div>
             <p class="section-kicker">Self-service booking</p>
-            <h2 id="bookingHeading">Book an appointment</h2>
+            <h2 id="bookingHeading"><span aria-hidden="true">🗓 </span>Book an appointment</h2>
           </div>
         </div>
 
@@ -222,5 +233,10 @@
       region.textContent = msg;
     };
   </script>
+
+  <footer class="site-footer">
+    <p>© 2025 NHS Patient Portal &middot; Hospital Self-Service &middot; <a href="https://www.nhs.uk" target="_blank" rel="noopener noreferrer">NHS.uk</a></p>
+    <p>For demonstration purposes only. Always contact your GP or call 111 for medical advice.</p>
+  </footer>
 </body>
 </html>

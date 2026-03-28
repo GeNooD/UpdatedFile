@@ -11,11 +11,24 @@
 </head>
 <body>
   <a href="#authMain" class="skip-link">Skip to main content</a>
-  <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">🌙</button>
+
+  <nav class="site-nav" aria-label="Site navigation">
+    <a href="/login.html" class="nav-brand" aria-label="NHS Patient Portal home">
+      <span class="nav-brand-icon" aria-hidden="true">🏥</span>
+      <span class="nav-brand-text">
+        <span class="nav-brand-name">NHS Patient Portal</span>
+        <span class="nav-brand-sub">Hospital Self-Service</span>
+      </span>
+    </a>
+    <div class="nav-actions">
+      <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">🌙</button>
+    </div>
+  </nav>
 
   <main id="authMain" class="page-shell auth-page-shell">
     <section class="auth-layout">
       <section class="auth-intro" aria-label="Portal introduction">
+        <div class="portal-logo" aria-hidden="true">🏥</div>
         <p class="eyebrow">Patient Services</p>
         <h1>Welcome to the Hospital Self-Service Portal</h1>
         <p class="subcopy">
