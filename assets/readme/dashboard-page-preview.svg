@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1360" viewBox="0 0 1440 1360">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07111f"/>
+      <stop offset="50%" stop-color="#0d1b2f"/>
+      <stop offset="100%" stop-color="#07111f"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4f8cff"/>
+      <stop offset="100%" stop-color="#7d63ff"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="20" stdDeviation="28" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect width="1440" height="1360" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1440" height="64" fill="#07111f" opacity="0.92"/>
+  <rect x="46" y="14" width="34" height="34" rx="10" fill="url(#brand)"/>
+  <text x="56" y="37" font-family="Arial, sans-serif" font-size="18">🏥</text>
+  <text x="92" y="31" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#f5f7fb">NHS Patient Portal</text>
+  <text x="92" y="48" font-family="Arial, sans-serif" font-size="11" fill="#b9c3d4">Hospital Self-Service</text>
+  <circle cx="1382" cy="32" r="18" fill="#10233d" stroke="#2a3d59"/>
+  <text x="1373" y="38" font-family="Arial, sans-serif" font-size="18">☀️</text>
+
+  <g filter="url(#shadow)">
+    <rect x="130" y="108" width="760" height="250" rx="24" fill="rgba(255,255,255,0.08)" stroke="#31435d"/>
+    <rect x="920" y="108" width="390" height="250" rx="24" fill="rgba(255,255,255,0.12)" stroke="#31435d"/>
+  </g>
+
+  <text x="170" y="164" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#7ef0c4">PATIENT AREA</text>
+  <text x="170" y="214" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#f5f7fb">Welcome, Amanda Carter</text>
+  <text x="170" y="256" font-family="Arial, sans-serif" font-size="18" fill="#b9c3d4">Use the sections below to manage your care and personal information.</text>
+  <g font-family="Arial, sans-serif" font-size="15" font-weight="600" fill="#f5f7fb">
+    <rect x="170" y="290" width="126" height="40" rx="20" fill="#1a2944" stroke="#31435d"/><text x="200" y="315">Appointments</text>
+    <rect x="312" y="290" width="150" height="40" rx="20" fill="#1a2944" stroke="#31435d"/><text x="340" y="315">Medical records</text>
+    <rect x="478" y="290" width="168" height="40" rx="20" fill="#1a2944" stroke="#31435d"/><text x="503" y="315">Profile management</text>
+  </g>
+
+  <text x="958" y="166" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#f5f7fb">Dashboard summary</text>
+  <text x="958" y="210" font-family="Arial, sans-serif" font-size="17" fill="#b9c3d4">This page allows you to view your profile,</text>
+  <text x="958" y="238" font-family="Arial, sans-serif" font-size="17" fill="#b9c3d4">manage appointments, and access your</text>
+  <text x="958" y="266" font-family="Arial, sans-serif" font-size="17" fill="#b9c3d4">healthcare records in one place.</text>
+  <rect x="958" y="300" width="150" height="50" rx="16" fill="#152338" stroke="#31435d"/>
+  <text x="1005" y="332" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#f5f7fb">Log out</text>
+
+  <g filter="url(#shadow)">
+    <rect x="130" y="392" width="360" height="124" rx="22" fill="rgba(255,255,255,0.08)" stroke="#31435d"/>
+    <rect x="540" y="392" width="360" height="124" rx="22" fill="rgba(255,255,255,0.08)" stroke="#31435d"/>
+    <rect x="950" y="392" width="360" height="124" rx="22" fill="rgba(255,255,255,0.08)" stroke="#31435d"/>
+  </g>
+  <text x="164" y="438" font-family="Arial, sans-serif" font-size="16" fill="#b9c3d4">📅 Upcoming appointments</text>
+  <text x="164" y="482" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#f5f7fb">3</text>
+  <text x="574" y="438" font-family="Arial, sans-serif" font-size="16" fill="#b9c3d4">📋 Medical records</text>
+  <text x="574" y="482" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#f5f7fb">5</text>
+  <text x="984" y="438" font-family="Arial, sans-serif" font-size="16" fill="#b9c3d4">👨‍⚕️ Doctors available</text>
+  <text x="984" y="482" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#f5f7fb">4</text>
+
+  <g filter="url(#shadow)">
+    <rect x="130" y="546" width="580" height="250" rx="24" fill="rgba(255,255,255,0.08)" stroke="#31435d"/>
+    <rect x="730" y="546" width="580" height="250" rx="24" fill="rgba(255,255,255,0.08)" stroke="#31435d"/>
+    <rect x="130" y="826" width="580" height="250" rx="24" fill="rgba(255,255,255,0.08)" stroke="#31435d"/>
+    <rect x="730" y="826" width="580" height="250" rx="24" fill="rgba(255,255,255,0.08)" stroke="#31435d"/>
+  </g>
+
+  <text x="168" y="590" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#7ef0c4">YOUR DETAILS</text>
+  <text x="168" y="626" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#f5f7fb">👤 Patient profile</text>
+  <g font-family="Arial, sans-serif" font-size="16" fill="#f5f7fb">
+    <rect x="168" y="654" width="246" height="52" rx="16" fill="#122033" stroke="#31435d"/><text x="184" y="676" font-weight="700">Name</text><text x="184" y="696">Amanda Carter</text>
+    <rect x="430" y="654" width="246" height="52" rx="16" fill="#122033" stroke="#31435d"/><text x="446" y="676" font-weight="700">Date of birth</text><text x="446" y="696">1990-05-18</text>
+    <rect x="168" y="722" width="246" height="52" rx="16" fill="#122033" stroke="#31435d"/><text x="184" y="744" font-weight="700">Email</text><text x="184" y="764">amanda@example.com</text>
+    <rect x="430" y="722" width="246" height="52" rx="16" fill="#122033" stroke="#31435d"/><text x="446" y="744" font-weight="700">Phone</text><text x="446" y="764">07123456789</text>
+  </g>
+
+  <text x="768" y="590" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#7ef0c4">NEXT VISITS</text>
+  <text x="768" y="626" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#f5f7fb">📅 Upcoming appointments</text>
+  <rect x="768" y="662" width="504" height="92" rx="18" fill="#122033" stroke="#31435d"/>
+  <text x="792" y="694" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#f5f7fb">Dr Ravi Patel</text>
+  <text x="792" y="722" font-family="Arial, sans-serif" font-size="16" fill="#b9c3d4">General Practice</text>
+  <text x="792" y="748" font-family="Arial, sans-serif" font-size="16" fill="#b9c3d4">2026-03-29 at 10:30 • Status: Confirmed</text>
+
+  <text x="168" y="870" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#7ef0c4">HEALTH INFORMATION</text>
+  <text x="168" y="906" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#f5f7fb">🩺 Medical records</text>
+  <rect x="168" y="942" width="504" height="94" rx="18" fill="#122033" stroke="#31435d"/>
+  <text x="192" y="974" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#f5f7fb">Diagnosis</text>
+  <text x="192" y="1002" font-family="Arial, sans-serif" font-size="16" fill="#b9c3d4">2026-03-20</text>
+  <text x="192" y="1028" font-family="Arial, sans-serif" font-size="16" fill="#b9c3d4">Seasonal asthma review. Symptoms stable.</text>
+
+  <text x="768" y="870" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#7ef0c4">SELF-SERVICE BOOKING</text>
+  <text x="768" y="906" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#f5f7fb">🗓 Book an appointment</text>
+  <g font-family="Arial, sans-serif" font-size="16" fill="#f5f7fb">
+    <text x="768" y="952" font-weight="700">Doctor</text><rect x="768" y="968" width="504" height="50" rx="14" fill="#122033" stroke="#31435d"/><text x="790" y="999">Dr Ravi Patel — General Practice</text>
+    <text x="768" y="1048" font-weight="700">Date</text><rect x="768" y="1064" width="240" height="50" rx="14" fill="#122033" stroke="#31435d"/><text x="790" y="1095">2026-03-29</text>
+    <text x="1032" y="1048" font-weight="700">Time slot</text><rect x="1032" y="1064" width="240" height="50" rx="14" fill="#122033" stroke="#31435d"/><text x="1054" y="1095">10:30</text>
+    <rect x="768" y="1138" width="260" height="54" rx="16" fill="url(#brand)"/><text x="830" y="1172" font-size="18" font-weight="700">Book appointment</text>
+  </g>
+
+  <circle cx="1338" cy="1260" r="34" fill="url(#brand)"/>
+  <text x="1324" y="1270" font-family="Arial, sans-serif" font-size="28">🤖</text>
+
+  <text x="130" y="1310" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#f5f7fb">Website preview: dashboard page</text>
+  <text x="130" y="1338" font-family="Arial, sans-serif" font-size="16" fill="#b9c3d4">Based on the real dashboard layout, cards, booking form, and assistant entry point in the repository.</text>
+</svg>
