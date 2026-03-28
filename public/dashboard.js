@@ -24,6 +24,9 @@ const assistantQuickPrompts = document.getElementById('assistantQuickPrompts');
 const clearChatBtn = document.getElementById('clearChatBtn');
 const savedNotesContainer = document.getElementById('savedNotesContainer');
 const savedAssistantNotesSection = document.getElementById('savedAssistantNotes');
+const chatFab = document.getElementById('chatFab');
+const chatWidgetEl = document.getElementById('chatWidget');
+const chatWidgetClose = document.getElementById('chatWidgetClose');
 
 window.addEventListener('load', async () => {
   const storedPatient = sessionStorage.getItem('patient');
@@ -220,6 +223,24 @@ savedNotesContainer?.addEventListener('click', (event) => {
   notes.splice(index, 1);
   sessionStorage.setItem('assistantNotes', JSON.stringify(notes));
   renderSavedNotes();
+});
+
+chatFab?.addEventListener('click', () => {
+  const opening = chatWidgetEl.hasAttribute('hidden');
+  if (opening) {
+    chatWidgetEl.removeAttribute('hidden');
+    chatFab.setAttribute('aria-expanded', 'true');
+    assistantInput?.focus();
+  } else {
+    chatWidgetEl.setAttribute('hidden', '');
+    chatFab.setAttribute('aria-expanded', 'false');
+  }
+});
+
+chatWidgetClose?.addEventListener('click', () => {
+  chatWidgetEl.setAttribute('hidden', '');
+  chatFab.setAttribute('aria-expanded', 'false');
+  chatFab.focus();
 });
 
 async function loadDashboard() {

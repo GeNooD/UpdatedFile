@@ -102,18 +102,22 @@
   <script>
     const themeToggle = document.getElementById('themeToggle');
 
-    themeToggle.addEventListener('click', () => {
-      const dark = document.body.classList.toggle('dark-mode');
-      themeToggle.setAttribute('aria-pressed', dark);
-      themeToggle.textContent = dark ? '☀️' : '🌙';
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
-    });
-
-    if (localStorage.getItem('theme') === 'dark') {
-      document.body.classList.add('dark-mode');
-      themeToggle.setAttribute('aria-pressed', 'true');
-      themeToggle.textContent = '☀️';
+    function applyTheme(theme) {
+      const isDark = theme === 'dark';
+      document.body.classList.toggle('dark-mode', isDark);
+      themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
     }
+
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(savedTheme || (systemPrefersDark ? 'dark' : 'light'));
+
+    themeToggle.addEventListener('click', () => {
+      const nextTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+      applyTheme(nextTheme);
+      localStorage.setItem('theme', nextTheme);
+    });
 
     document.body.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') document.body.classList.add('user-is-tabbing');

@@ -147,47 +147,50 @@
 
       <p id="profileMessage" class="message" aria-live="polite"></p>
     </section>
-
-    <section class="card ai-assistant-card" aria-labelledby="assistantHeading">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">Smart help</p>
-          <h2 id="assistantHeading">AI Health Assistant</h2>
-          <p class="small">Get quick general guidance. For emergencies, call your local emergency number immediately.</p>
-        </div>
-        <button type="button" id="clearChatBtn" class="secondary-btn clear-chat-btn" aria-label="Clear chat history">Clear chat</button>
-      </div>
-
-      <div class="assistant-quick-prompts" id="assistantQuickPrompts">
-        <button type="button" class="secondary-btn quick-prompt" data-prompt="I have a mild sore throat and cough for 2 days. What self-care steps can I take?">Cold and cough self-care</button>
-        <button type="button" class="secondary-btn quick-prompt" data-prompt="What warning signs mean I should seek urgent care for chest pain?">Chest pain warning signs</button>
-        <button type="button" class="secondary-btn quick-prompt" data-prompt="How can I prepare for my upcoming GP appointment to get the most out of it?">Prepare for GP appointment</button>
-      </div>
-
-      <div id="assistantMessages" class="assistant-messages" aria-live="polite">
-        <div class="assistant-message assistant-message-bot">
-          Hello, I can provide general health information and next-step guidance, but I cannot diagnose conditions.
-        </div>
-      </div>
-
-      <form id="assistantForm" class="assistant-form">
-        <label for="assistantInput">Ask a health question</label>
-        <textarea id="assistantInput" rows="3" maxlength="800" placeholder="Example: I have a headache and fever since yesterday. What should I watch for?" required></textarea>
-        <div class="assistant-form-row">
-          <span class="small" id="assistantCounter">0/800</span>
-          <button type="submit" id="assistantSendButton">Get response</button>
-        </div>
-      </form>
-
-      <section id="savedAssistantNotes" class="saved-assistant-notes" hidden aria-label="Saved health notes">
-        <div class="saved-notes-header">
-          <h3>Saved notes</h3>
-          <span class="small">Stored in your browser session only &mdash; not sent to the server.</span>
-        </div>
-        <div id="savedNotesContainer" class="saved-notes-list"></div>
-      </section>
-    </section>
   </main>
+
+  <aside id="chatWidget" class="chat-widget" aria-label="AI Health Assistant" hidden>
+    <div class="chat-widget-header">
+      <span class="chat-widget-title">🤖 AI Health Assistant</span>
+      <div class="chat-widget-actions">
+        <button type="button" id="clearChatBtn" class="chat-icon-btn" aria-label="Clear chat history" title="Clear chat">🗑</button>
+        <button type="button" id="chatWidgetClose" class="chat-icon-btn" aria-label="Close assistant" title="Close">✕</button>
+      </div>
+    </div>
+
+    <div class="assistant-quick-prompts" id="assistantQuickPrompts">
+      <button type="button" class="secondary-btn quick-prompt" data-prompt="I have a mild sore throat and cough for 2 days. What self-care steps can I take?">Cold &amp; cough</button>
+      <button type="button" class="secondary-btn quick-prompt" data-prompt="What warning signs mean I should seek urgent care for chest pain?">Chest pain</button>
+      <button type="button" class="secondary-btn quick-prompt" data-prompt="How can I prepare for my upcoming GP appointment to get the most out of it?">GP prep</button>
+    </div>
+
+    <div id="assistantMessages" class="assistant-messages" aria-live="polite">
+      <div class="assistant-message assistant-message-bot">
+        <div class="message-body">Hello! I can provide general health guidance. I cannot diagnose conditions.</div>
+      </div>
+    </div>
+
+    <form id="assistantForm" class="assistant-form">
+      <label for="assistantInput" class="visually-hidden">Ask a health question</label>
+      <textarea id="assistantInput" rows="2" maxlength="800" placeholder="Ask a health question…" required></textarea>
+      <div class="assistant-form-row">
+        <span class="small" id="assistantCounter">0/800</span>
+        <button type="submit" id="assistantSendButton">Send</button>
+      </div>
+    </form>
+
+    <section id="savedAssistantNotes" class="saved-assistant-notes" hidden aria-label="Saved health notes">
+      <div class="saved-notes-header">
+        <h3>Saved notes</h3>
+        <span class="small">Session only</span>
+      </div>
+      <div id="savedNotesContainer" class="saved-notes-list"></div>
+    </section>
+  </aside>
+
+  <button type="button" id="chatFab" class="chat-fab" aria-label="Open AI Health Assistant" aria-expanded="false">
+    🤖
+  </button>
 
   <div id="loadingSpinner" class="spinner" hidden aria-hidden="true" role="status">
     <span class="visually-hidden">Loading...</span>
@@ -197,18 +200,22 @@
   <script>
     const themeToggle = document.getElementById('themeToggle');
 
-    themeToggle.addEventListener('click', () => {
-      const dark = document.body.classList.toggle('dark-mode');
-      themeToggle.setAttribute('aria-pressed', dark);
-      themeToggle.textContent = dark ? '☀️' : '🌙';
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
-    });
-
-    if (localStorage.getItem('theme') === 'dark') {
-      document.body.classList.add('dark-mode');
-      themeToggle.setAttribute('aria-pressed', 'true');
-      themeToggle.textContent = '☀️';
+    function applyTheme(theme) {
+      const isDark = theme === 'dark';
+      document.body.classList.toggle('dark-mode', isDark);
+      themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
     }
+
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(savedTheme || (systemPrefersDark ? 'dark' : 'light'));
+
+    themeToggle.addEventListener('click', () => {
+      const nextTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+      applyTheme(nextTheme);
+      localStorage.setItem('theme', nextTheme);
+    });
 
     document.body.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') document.body.classList.add('user-is-tabbing');
