@@ -10,14 +10,17 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="page-shell auth-page-shell">
+  <a href="#authMain" class="skip-link">Skip to main content</a>
+  <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">🌙</button>
+
+  <main id="authMain" class="page-shell auth-page-shell">
     <section class="auth-layout">
       <section class="auth-intro" aria-label="Portal introduction">
         <p class="eyebrow">Patient Services</p>
         <h1>Create your patient account</h1>
         <p class="subcopy">
-          Register to manage appointments, view doctor availability,
-          access your medical records, and keep your personal details up to date.
+          Register once to manage appointments, view doctor availability,
+          and keep your profile and records up to date.
         </p>
 
         <div class="hero-badges">
@@ -30,9 +33,11 @@
 
       <section class="auth-card" aria-label="Patient registration form">
         <div class="section-heading">
-          <p class="section-kicker">New account</p>
-          <h2>Register</h2>
-          <p>Complete the form below to create your patient account.</p>
+          <div>
+            <p class="section-kicker">New account</p>
+            <h2>Register</h2>
+            <p>Complete the form below to create your patient account.</p>
+          </div>
         </div>
 
         <form id="registerForm" class="form-grid" novalidate>
@@ -81,7 +86,7 @@
             <input type="password" id="password" name="password" placeholder="Choose a password" required />
           </label>
 
-          <button type="submit" class="btn-primary">Create account</button>
+          <button type="submit">Create account</button>
         </form>
 
         <p id="registerMessage" class="message" aria-live="polite"></p>
@@ -93,6 +98,26 @@
     </section>
   </main>
 
-  <script src="register.js"></script>
+  <script src="register.js" defer></script>
+  <script>
+    const themeToggle = document.getElementById('themeToggle');
+
+    themeToggle.addEventListener('click', () => {
+      const dark = document.body.classList.toggle('dark-mode');
+      themeToggle.setAttribute('aria-pressed', dark);
+      themeToggle.textContent = dark ? '☀️' : '🌙';
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    });
+
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+      themeToggle.setAttribute('aria-pressed', 'true');
+      themeToggle.textContent = '☀️';
+    }
+
+    document.body.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') document.body.classList.add('user-is-tabbing');
+    });
+  </script>
 </body>
 </html>
