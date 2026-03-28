@@ -192,10 +192,6 @@
     🤖
   </button>
 
-  <div id="loadingSpinner" class="spinner" hidden aria-hidden="true" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-
   <script src="dashboard.js" defer></script>
   <script>
     const themeToggle = document.getElementById('themeToggle');
@@ -220,12 +216,6 @@
     document.body.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') document.body.classList.add('user-is-tabbing');
     });
-
-    window.showSpinner = function(show = true) {
-      const spinner = document.getElementById('loadingSpinner');
-      spinner.hidden = !show;
-      spinner.setAttribute('aria-hidden', !show);
-    };
 
     window.announce = function(msg) {
       const region = document.getElementById('liveRegion');

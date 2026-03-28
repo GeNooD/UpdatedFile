@@ -22,7 +22,6 @@ loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   setMessage(loginMessage, '');
   try {
-    showSpinner(true);
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
     const response = await safeFetch('/api/login', {
@@ -46,7 +45,7 @@ loginForm.addEventListener('submit', async (event) => {
     setMessage(loginMessage, 'Network error. Please try again.', 'error');
     announce('Network error.');
   } finally {
-    showSpinner(false);
+    // login done
   }
 });
 
@@ -66,7 +65,6 @@ bookingForm.addEventListener('submit', async (event) => {
       announce('Please choose a doctor, date, and available time.');
       return;
     }
-    showSpinner(true);
     const payload = {
       patientId: state.patient.id,
       doctorId: Number(doctorSelect.value),
@@ -90,7 +88,6 @@ bookingForm.addEventListener('submit', async (event) => {
     setMessage(bookingMessage, 'Network error. Please try again.', 'error');
     announce('Network error.');
   } finally {
-    showSpinner(false);
     submitBtn.disabled = false;
   }
 });
@@ -123,12 +120,11 @@ window.addEventListener('load', async () => {
 
 async function loadDashboard() {
   try {
-    showSpinner(true);
     await Promise.all([loadDoctors(), loadRecords(), loadAppointments()]);
     renderProfile();
     renderStats();
   } finally {
-    showSpinner(false);
+    // done
   }
 }
 
