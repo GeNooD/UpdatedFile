@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1138" viewBox="0 0 1400 1138">
+<style>
+    .title { font: 700 34px DejaVu Sans, Arial, sans-serif; fill: #ebebf5; }
+    .subtitle { font: 400 26px DejaVu Sans, Arial, sans-serif; fill: #a5aabe; }
+    .code { font: 28px 'DejaVu Sans Mono', Consolas, monospace; fill: #ebebf5; white-space: pre; }
+    .ln { font: 28px 'DejaVu Sans Mono', Consolas, monospace; fill: #787d91; }
+</style>
+<rect width="100%" height="100%" fill="#121218"/>
+<rect x="40" y="40" width="1320" height="1058" rx="26" fill="#1b1c24"/>
+<circle cx="1278" cy="76" r="10" fill="#ff5f56"/>
+<circle cx="1308" cy="76" r="10" fill="#ffbd2e"/>
+<circle cx="1338" cy="76" r="10" fill="#27c93f"/>
+<text x="80" y="88" class="title">Dashboard logic screenshot</text>
+<text x="80" y="124" class="subtitle">Dashboard load flow and assistant submit handling</text>
+<text x="74" y="170" class="ln"> 1</text><text x="145" y="170" class="code">// public/dashboard.js</text>
+<text x="74" y="214" class="ln"> 2</text><text x="145" y="214" class="code">window.addEventListener('load', async () =&gt; {</text>
+<text x="74" y="258" class="ln"> 3</text><text x="145" y="258" class="code">  const storedPatient = sessionStorage.getItem('patient');</text>
+<text x="74" y="302" class="ln"> 4</text><text x="145" y="302" class="code"></text>
+<text x="74" y="346" class="ln"> 5</text><text x="145" y="346" class="code">  if (!storedPatient) {</text>
+<text x="74" y="390" class="ln"> 6</text><text x="145" y="390" class="code">    window.location.href = '/login.html';</text>
+<text x="74" y="434" class="ln"> 7</text><text x="145" y="434" class="code">    return;</text>
+<text x="74" y="478" class="ln"> 8</text><text x="145" y="478" class="code">  }</text>
+<text x="74" y="522" class="ln"> 9</text><text x="145" y="522" class="code"></text>
+<text x="74" y="566" class="ln">10</text><text x="145" y="566" class="code">  state.patient = JSON.parse(storedPatient);</text>
+<text x="74" y="610" class="ln">11</text><text x="145" y="610" class="code">  document.getElementById('welcomeTitle').textContent =</text>
+<text x="74" y="654" class="ln">12</text><text x="145" y="654" class="code">    `Welcome, ${state.patient.name}`;</text>
+<text x="74" y="698" class="ln">13</text><text x="145" y="698" class="code">  await loadDashboard();</text>
+<text x="74" y="742" class="ln">14</text><text x="145" y="742" class="code">  loadChatHistory();</text>
+<text x="74" y="786" class="ln">15</text><text x="145" y="786" class="code">  renderSavedNotes();</text>
+<text x="74" y="830" class="ln">16</text><text x="145" y="830" class="code">});</text>
+<text x="74" y="874" class="ln">17</text><text x="145" y="874" class="code"></text>
+<text x="74" y="918" class="ln">18</text><text x="145" y="918" class="code">assistantForm?.addEventListener('submit', async (event) =&gt; {</text>
+<text x="74" y="962" class="ln">19</text><text x="145" y="962" class="code">  event.preventDefault();</text>
+<text x="74" y="1006" class="ln">20</text><text x="145" y="1006" class="code"></text>
+<text x="74" y="1050" class="ln">21</text><text x="145" y="1050" class="code">  const question = assistantInput.value.trim();</text>
+<text x="74" y="1094" class="ln">22</text><text x="145" y="1094" class="code">  if (!question) return;</text></svg>
