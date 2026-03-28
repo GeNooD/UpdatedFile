@@ -1,5 +1,4 @@
 require('dotenv').config();
-console.log('DATABASE_URL loaded:', !!process.env.DATABASE_URL);
 
 const express = require('express');
 const path = require('path');
@@ -444,13 +443,17 @@ app.post('/api/assistant/medical', async (req, res) => {
 
     if (emergencyPattern.test(trimmedQuestion)) {
       return res.json({
-        reply: 'Your symptoms may be serious. Please seek urgent medical help immediately or call your local emergency number now.'
+        reply: 'Your symptoms may be serious. Please seek urgent medical help immediately or call your local emergency number now.',
+        triage: 'urgent'
       });
     }
 
+    const triage = getTriageLevel(trimmedQuestion);
+
     if (!process.env.OPENAI_API_KEY || typeof fetch !== 'function') {
       return res.json({
-        reply: buildFallbackMedicalReply(trimmedQuestion)
+        reply: buildFallbackMedicalReply(trimmedQuestion),
+        triage
       });
     }
 
@@ -471,7 +474,8 @@ app.post('/api/assistant/medical', async (req, res) => {
 
     if (!aiResponse.ok) {
       return res.json({
-        reply: buildFallbackMedicalReply(trimmedQuestion)
+        reply: buildFallbackMedicalReply(trimmedQuestion),
+        triage
       });
     }
 
@@ -480,11 +484,12 @@ app.post('/api/assistant/medical', async (req, res) => {
 
     if (!output.trim()) {
       return res.json({
-        reply: buildFallbackMedicalReply(trimmedQuestion)
+        reply: buildFallbackMedicalReply(trimmedQuestion),
+        triage
       });
     }
 
-    return res.json({ reply: output.trim() });
+    return res.json({ reply: output.trim(), triage });
   } catch (error) {
     console.error('Assistant error:', error);
     return res.status(500).json({
@@ -502,6 +507,14 @@ app.get('/api/test-db', async (_req, res) => {
     res.status(500).json({ ok: false, error: 'Database connection failed' });
   }
 });
+
+function getTriageLevel(question) {
+  const q = question.toLowerCase();
+  if (/\bpain\b|fever|bleeding|infection|injury|wound|swollen|swelling|rash|difficulty breathing|shortness of breath|vomit|chest|dizz|faint|allerg|fracture|broken|burn|unable to/.test(q)) {
+    return 'medium';
+  }
+  return 'low';
+}
 
 function buildFallbackMedicalReply(question) {
   const normalized = question.toLowerCase();

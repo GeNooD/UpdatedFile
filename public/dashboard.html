@@ -155,6 +155,7 @@
           <h2 id="assistantHeading">AI Health Assistant</h2>
           <p class="small">Get quick general guidance. For emergencies, call your local emergency number immediately.</p>
         </div>
+        <button type="button" id="clearChatBtn" class="secondary-btn clear-chat-btn" aria-label="Clear chat history">Clear chat</button>
       </div>
 
       <div class="assistant-quick-prompts" id="assistantQuickPrompts">
@@ -177,6 +178,14 @@
           <button type="submit" id="assistantSendButton">Get response</button>
         </div>
       </form>
+
+      <section id="savedAssistantNotes" class="saved-assistant-notes" hidden aria-label="Saved health notes">
+        <div class="saved-notes-header">
+          <h3>Saved notes</h3>
+          <span class="small">Stored in your browser session only &mdash; not sent to the server.</span>
+        </div>
+        <div id="savedNotesContainer" class="saved-notes-list"></div>
+      </section>
     </section>
   </main>
 

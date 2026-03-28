@@ -536,6 +536,134 @@ a:hover {
   border: 1px solid rgba(128, 162, 255, 0.35);
 }
 
+.message-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.message-body {
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.triage-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.triage-low {
+  background: rgba(126, 240, 196, 0.15);
+  color: #7ef0c4;
+  border: 1px solid rgba(126, 240, 196, 0.3);
+}
+
+.triage-medium {
+  background: rgba(255, 198, 80, 0.15);
+  color: #ffc650;
+  border: 1px solid rgba(255, 198, 80, 0.3);
+}
+
+.triage-urgent {
+  background: rgba(255, 100, 100, 0.15);
+  color: #ff8080;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+}
+
+.save-note-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--muted);
+  padding: 4px 11px;
+  font-size: 0.78rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  width: auto;
+}
+
+.save-note-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.clear-chat-btn {
+  width: auto;
+  padding: 10px 16px;
+  font-size: 0.86rem;
+  align-self: flex-start;
+}
+
+.saved-assistant-notes {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.saved-notes-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.saved-notes-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.saved-notes-list {
+  display: grid;
+  gap: 10px;
+}
+
+.saved-note-item {
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 3px solid rgba(126, 240, 196, 0.4);
+}
+
+.saved-note-item.triage-medium {
+  border-left-color: rgba(255, 198, 80, 0.5);
+}
+
+.saved-note-item.triage-urgent {
+  border-left-color: rgba(255, 100, 100, 0.5);
+}
+
+.saved-note-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.remove-note-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  margin-left: auto;
+  width: auto;
+}
+
+.remove-note-btn:hover {
+  color: #ff8080;
+}
+
 .assistant-form {
   display: grid;
   gap: 8px;

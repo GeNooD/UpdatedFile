@@ -2,7 +2,8 @@ const state = {
   patient: null,
   doctors: [],
   records: [],
-  appointments: []
+  appointments: [],
+  chatHistory: []
 };
 
 const bookingForm = document.getElementById('bookingForm');
@@ -20,6 +21,9 @@ const assistantMessages = document.getElementById('assistantMessages');
 const assistantSendButton = document.getElementById('assistantSendButton');
 const assistantCounter = document.getElementById('assistantCounter');
 const assistantQuickPrompts = document.getElementById('assistantQuickPrompts');
+const clearChatBtn = document.getElementById('clearChatBtn');
+const savedNotesContainer = document.getElementById('savedNotesContainer');
+const savedAssistantNotesSection = document.getElementById('savedAssistantNotes');
 
 window.addEventListener('load', async () => {
   const storedPatient = sessionStorage.getItem('patient');
@@ -32,6 +36,8 @@ window.addEventListener('load', async () => {
   state.patient = JSON.parse(storedPatient);
   document.getElementById('welcomeTitle').textContent = `Welcome, ${state.patient.name}`;
   await loadDashboard();
+  loadChatHistory();
+  renderSavedNotes();
 });
 
 bookingForm?.addEventListener('submit', async (event) => {
@@ -178,20 +184,42 @@ assistantForm?.addEventListener('submit', async (event) => {
     if (!response.ok) {
       appendAssistantMessage(
         data.message || 'I could not generate a response right now. Please try again shortly.',
-        'bot'
+        'bot',
+        'low'
       );
       return;
     }
 
-    appendAssistantMessage(data.reply, 'bot');
+    appendAssistantMessage(data.reply, 'bot', data.triage || 'low');
   } catch (error) {
     appendAssistantMessage(
       'I could not connect to the assistant service right now. Please try again.',
-      'bot'
+      'bot',
+      'low'
     );
   } finally {
     assistantSendButton.disabled = false;
   }
+});
+
+clearChatBtn?.addEventListener('click', () => {
+  state.chatHistory = [];
+  const key = `chatHistory_${state.patient?.id}`;
+  sessionStorage.removeItem(key);
+  assistantMessages.innerHTML = `
+    <div class="assistant-message assistant-message-bot">
+      <div class="message-body">Hello, I can provide general health information and next-step guidance, but I cannot diagnose conditions.</div>
+    </div>`;
+});
+
+savedNotesContainer?.addEventListener('click', (event) => {
+  const btn = event.target.closest('.remove-note-btn');
+  if (!btn) return;
+  const index = parseInt(btn.dataset.noteIndex, 10);
+  const notes = JSON.parse(sessionStorage.getItem('assistantNotes') || '[]');
+  notes.splice(index, 1);
+  sessionStorage.setItem('assistantNotes', JSON.stringify(notes));
+  renderSavedNotes();
 });
 
 async function loadDashboard() {
@@ -418,12 +446,81 @@ function setMessage(element, text, type = '') {
   element.className = `message ${type}`.trim();
 }
 
-function appendAssistantMessage(text, role = 'bot') {
+function appendAssistantMessage(text, role = 'bot', triage = 'low', skipSave = false) {
   if (!assistantMessages) return;
 
   const item = document.createElement('div');
   item.className = `assistant-message ${role === 'user' ? 'assistant-message-user' : 'assistant-message-bot'}`;
-  item.textContent = text;
+
+  if (role === 'bot') {
+    const tLabel = triage === 'urgent' ? 'Urgent' : triage === 'medium' ? 'Seek advice' : 'General info';
+    item.innerHTML =
+      `<div class="message-header">` +
+      `<span class="triage-badge triage-${triage}">${tLabel}</span>` +
+      `<button type="button" class="save-note-btn" aria-label="Save this response as a note">Save note</button>` +
+      `</div><div class="message-body">${escapeHtml(text)}</div>`;
+    item.querySelector('.save-note-btn').addEventListener('click', () => saveAssistantNote(text, triage));
+  } else {
+    item.textContent = text;
+  }
+
   assistantMessages.appendChild(item);
   assistantMessages.scrollTop = assistantMessages.scrollHeight;
+
+  if (!skipSave) {
+    state.chatHistory.push({ text, role, triage });
+    const key = `chatHistory_${state.patient?.id}`;
+    sessionStorage.setItem(key, JSON.stringify(state.chatHistory));
+  }
+}
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function loadChatHistory() {
+  if (!state.patient) return;
+  const key = `chatHistory_${state.patient.id}`;
+  const history = JSON.parse(sessionStorage.getItem(key) || '[]');
+  if (!history.length) return;
+  assistantMessages.innerHTML = '';
+  history.forEach(({ text, role, triage }) => {
+    appendAssistantMessage(text, role, triage || 'low', true);
+  });
+  state.chatHistory = history;
+}
+
+function saveAssistantNote(text, triage) {
+  const note = { text, triage, savedAt: new Date().toLocaleString() };
+  const notes = JSON.parse(sessionStorage.getItem('assistantNotes') || '[]');
+  notes.push(note);
+  sessionStorage.setItem('assistantNotes', JSON.stringify(notes));
+  renderSavedNotes();
+}
+
+function renderSavedNotes() {
+  if (!savedAssistantNotesSection) return;
+  const notes = JSON.parse(sessionStorage.getItem('assistantNotes') || '[]');
+  if (!notes.length) {
+    savedAssistantNotesSection.hidden = true;
+    return;
+  }
+  savedAssistantNotesSection.hidden = false;
+  if (savedNotesContainer) {
+    savedNotesContainer.innerHTML = notes.map((note, i) => {
+      const label = note.triage === 'urgent' ? 'Urgent' : note.triage === 'medium' ? 'Seek advice' : 'General info';
+      return (
+        `<div class="saved-note-item triage-${note.triage}">` +
+        `<div class="saved-note-meta">` +
+        `<span class="triage-badge triage-${note.triage}">${label}</span>` +
+        `<span class="small">${note.savedAt}</span>` +
+        `<button type="button" class="remove-note-btn" data-note-index="${i}" aria-label="Remove note">&times;</button>` +
+        `</div><p class="small">${escapeHtml(note.text)}</p></div>`
+      );
+    }).join('');
+  }
 }
