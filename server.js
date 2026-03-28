@@ -422,6 +422,77 @@ app.post('/api/appointments', async (req, res) => {
   }
 });
 
+app.post('/api/assistant/medical', async (req, res) => {
+  try {
+    const { question } = req.body || {};
+
+    if (!question || typeof question !== 'string' || !question.trim()) {
+      return res.status(400).json({
+        message: 'Please enter a health question.'
+      });
+    }
+
+    const trimmedQuestion = question.trim();
+
+    if (trimmedQuestion.length > 800) {
+      return res.status(400).json({
+        message: 'Please keep your question under 800 characters.'
+      });
+    }
+
+    const emergencyPattern = /chest pain|can\'t breathe|cannot breathe|severe bleeding|stroke|suicidal|unconscious|seizure/i;
+
+    if (emergencyPattern.test(trimmedQuestion)) {
+      return res.json({
+        reply: 'Your symptoms may be serious. Please seek urgent medical help immediately or call your local emergency number now.'
+      });
+    }
+
+    if (!process.env.OPENAI_API_KEY || typeof fetch !== 'function') {
+      return res.json({
+        reply: buildFallbackMedicalReply(trimmedQuestion)
+      });
+    }
+
+    const prompt = `You are a cautious medical information assistant for patients.\nRules:\n- Do not diagnose.\n- Give concise, practical self-care and triage guidance.\n- Include clear red-flag symptoms requiring urgent care.\n- Recommend contacting GP/clinician for persistent or worsening symptoms.\n- Add a brief disclaimer that this is not a medical diagnosis.\n\nPatient question: ${trimmedQuestion}`;
+
+    const aiResponse = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
+        input: prompt,
+        temperature: 0.2
+      })
+    });
+
+    if (!aiResponse.ok) {
+      return res.json({
+        reply: buildFallbackMedicalReply(trimmedQuestion)
+      });
+    }
+
+    const aiData = await aiResponse.json();
+    const output = aiData?.output_text || '';
+
+    if (!output.trim()) {
+      return res.json({
+        reply: buildFallbackMedicalReply(trimmedQuestion)
+      });
+    }
+
+    return res.json({ reply: output.trim() });
+  } catch (error) {
+    console.error('Assistant error:', error);
+    return res.status(500).json({
+      message: 'Assistant is temporarily unavailable. Please try again.'
+    });
+  }
+});
+
 app.get('/api/test-db', async (_req, res) => {
   try {
     const result = await pool.query('select now()');
@@ -431,6 +502,24 @@ app.get('/api/test-db', async (_req, res) => {
     res.status(500).json({ ok: false, error: 'Database connection failed' });
   }
 });
+
+function buildFallbackMedicalReply(question) {
+  const normalized = question.toLowerCase();
+
+  if (normalized.includes('headache') || normalized.includes('fever')) {
+    return 'For mild headache or fever: rest, hydrate well, and consider standard over-the-counter pain relief if suitable for you. Seek urgent care for severe headache, stiff neck, confusion, rash, persistent vomiting, or worsening symptoms. This guidance is informational and not a diagnosis.';
+  }
+
+  if (normalized.includes('cough') || normalized.includes('sore throat')) {
+    return 'For mild cough or sore throat: fluids, warm drinks, rest, and symptom relief medicines can help. Seek urgent care for breathing difficulty, chest pain, coughing blood, dehydration, or symptoms that worsen or last beyond several days. This guidance is informational and not a diagnosis.';
+  }
+
+  if (normalized.includes('stomach') || normalized.includes('vomit') || normalized.includes('diarrhea')) {
+    return 'For mild stomach upset: sip fluids often, try bland foods, and avoid dehydration. Seek urgent care for severe abdominal pain, blood in stool or vomit, persistent vomiting, high fever, or dehydration signs. This guidance is informational and not a diagnosis.';
+  }
+
+  return 'I can provide general guidance but not a diagnosis. Monitor your symptoms, rest, stay hydrated, and seek clinical advice if symptoms persist or worsen. Seek urgent medical help immediately for severe pain, trouble breathing, confusion, fainting, or heavy bleeding.';
+}
 
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));

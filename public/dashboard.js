@@ -14,6 +14,12 @@ const logoutButton = document.getElementById('logoutButton');
 
 const profileForm = document.getElementById('profileForm');
 const profileMessage = document.getElementById('profileMessage');
+const assistantForm = document.getElementById('assistantForm');
+const assistantInput = document.getElementById('assistantInput');
+const assistantMessages = document.getElementById('assistantMessages');
+const assistantSendButton = document.getElementById('assistantSendButton');
+const assistantCounter = document.getElementById('assistantCounter');
+const assistantQuickPrompts = document.getElementById('assistantQuickPrompts');
 
 window.addEventListener('load', async () => {
   const storedPatient = sessionStorage.getItem('patient');
@@ -137,6 +143,56 @@ profileForm?.addEventListener('submit', async (event) => {
 doctorSelect?.addEventListener('change', populateDateOptions);
 dateSelect?.addEventListener('change', populateTimeOptions);
 logoutButton?.addEventListener('click', handleLogout);
+
+assistantInput?.addEventListener('input', () => {
+  assistantCounter.textContent = `${assistantInput.value.length}/800`;
+});
+
+assistantQuickPrompts?.addEventListener('click', (event) => {
+  const trigger = event.target.closest('.quick-prompt');
+  if (!trigger || !assistantInput) return;
+  assistantInput.value = trigger.dataset.prompt || '';
+  assistantCounter.textContent = `${assistantInput.value.length}/800`;
+  assistantInput.focus();
+});
+
+assistantForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const question = assistantInput.value.trim();
+  if (!question) return;
+
+  appendAssistantMessage(question, 'user');
+  assistantInput.value = '';
+  assistantCounter.textContent = '0/800';
+  assistantSendButton.disabled = true;
+
+  try {
+    const response = await fetch('/api/assistant/medical', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      appendAssistantMessage(
+        data.message || 'I could not generate a response right now. Please try again shortly.',
+        'bot'
+      );
+      return;
+    }
+
+    appendAssistantMessage(data.reply, 'bot');
+  } catch (error) {
+    appendAssistantMessage(
+      'I could not connect to the assistant service right now. Please try again.',
+      'bot'
+    );
+  } finally {
+    assistantSendButton.disabled = false;
+  }
+});
 
 async function loadDashboard() {
   await Promise.all([
@@ -360,4 +416,14 @@ function setMessage(element, text, type = '') {
   if (!element) return;
   element.textContent = text;
   element.className = `message ${type}`.trim();
+}
+
+function appendAssistantMessage(text, role = 'bot') {
+  if (!assistantMessages) return;
+
+  const item = document.createElement('div');
+  item.className = `assistant-message ${role === 'user' ? 'assistant-message-user' : 'assistant-message-bot'}`;
+  item.textContent = text;
+  assistantMessages.appendChild(item);
+  assistantMessages.scrollTop = assistantMessages.scrollHeight;
 }
