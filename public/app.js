@@ -2,7 +2,8 @@ const state = {
   patient: null,
   doctors: [],
   records: [],
-  specialty: 'all'
+  specialty: 'all',
+  loading: false
 };
 
 const loginSection = document.getElementById('loginSection');
@@ -20,75 +21,95 @@ const logoutButton = document.getElementById('logoutButton');
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   setMessage(loginMessage, '');
-
-  const username = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value.trim();
-
-  const response = await fetch('/api/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    setMessage(loginMessage, data.message, 'error');
-    return;
+  try {
+    showSpinner(true);
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const response = await safeFetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    if (!response.ok) {
+      setMessage(loginMessage, response.data?.message || 'Login failed.', 'error');
+      announce('Login failed.');
+      return;
+    }
+    state.patient = response.data.patient;
+    loginSection.classList.add('hidden');
+    dashboard.classList.remove('hidden');
+    setMessage(loginMessage, response.data.message, 'success');
+    document.getElementById('welcomeTitle').textContent = `Welcome, ${state.patient.name}`;
+    announce('Login successful. Welcome, ' + state.patient.name);
+    await loadDashboard();
+  } catch (err) {
+    setMessage(loginMessage, 'Network error. Please try again.', 'error');
+    announce('Network error.');
+  } finally {
+    showSpinner(false);
   }
-
-  state.patient = data.patient;
-  loginSection.classList.add('hidden');
-  dashboard.classList.remove('hidden');
-  setMessage(loginMessage, data.message, 'success');
-  document.getElementById('welcomeTitle').textContent = `Welcome, ${state.patient.name}`;
-  await loadDashboard();
 });
 
 bookingForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   setMessage(bookingMessage, '');
-
-  if (!state.patient) {
-    setMessage(bookingMessage, 'Please sign in first.', 'error');
-    return;
+  const submitBtn = bookingForm.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  try {
+    if (!state.patient) {
+      setMessage(bookingMessage, 'Please sign in first.', 'error');
+      announce('Please sign in first.');
+      return;
+    }
+    if (!doctorSelect.value || !dateSelect.value || !timeSelect.value) {
+      setMessage(bookingMessage, 'Please choose a doctor, date, and available time.', 'error');
+      announce('Please choose a doctor, date, and available time.');
+      return;
+    }
+    showSpinner(true);
+    const payload = {
+      patientId: state.patient.id,
+      doctorId: Number(doctorSelect.value),
+      date: dateSelect.value,
+      time: timeSelect.value
+    };
+    const response = await safeFetch('/api/appointments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) {
+      setMessage(bookingMessage, response.data?.message || 'Booking failed.', 'error');
+      announce('Booking failed.');
+      return;
+    }
+    setMessage(bookingMessage, `${response.data.message} A confirmation has been added to your dashboard.`, 'success');
+    announce('Appointment booked successfully.');
+    await loadDashboard();
+  } catch (err) {
+    setMessage(bookingMessage, 'Network error. Please try again.', 'error');
+    announce('Network error.');
+  } finally {
+    showSpinner(false);
+    submitBtn.disabled = false;
   }
-
-  if (!doctorSelect.value || !dateSelect.value || !timeSelect.value) {
-    setMessage(bookingMessage, 'Please choose a doctor, date, and available time.', 'error');
-    return;
-  }
-
-  const payload = {
-    patientId: state.patient.id,
-    doctorId: Number(doctorSelect.value),
-    date: dateSelect.value,
-    time: timeSelect.value
-  };
-
-  const response = await fetch('/api/appointments', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    setMessage(bookingMessage, data.message, 'error');
-    return;
-  }
-
-  setMessage(bookingMessage, `${data.message} A confirmation has been added to your dashboard.`, 'success');
-  await loadDashboard();
 });
 
 doctorSelect.addEventListener('change', populateDateOptions);
 dateSelect.addEventListener('change', populateTimeOptions);
-specialtyFilter.addEventListener('change', (event) => {
+// Debounce utility
+function debounce(fn, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+specialtyFilter.addEventListener('change', debounce((event) => {
   state.specialty = event.target.value;
   renderCalendar();
-});
+}, 200));
 logoutButton.addEventListener('click', handleLogout);
 
 window.addEventListener('load', async () => {
@@ -101,58 +122,67 @@ window.addEventListener('load', async () => {
 });
 
 async function loadDashboard() {
-  await Promise.all([loadDoctors(), loadRecords(), loadAppointments()]);
-  renderProfile();
-  renderStats();
+  try {
+    showSpinner(true);
+    await Promise.all([loadDoctors(), loadRecords(), loadAppointments()]);
+    renderProfile();
+    renderStats();
+  } finally {
+    showSpinner(false);
+  }
 }
 
 async function loadDoctors() {
-  const response = await fetch('/api/doctors');
-  state.doctors = await response.json();
-  populateSpecialtyFilter();
-  renderCalendar();
-  populateDoctorOptions();
+  const response = await safeFetch('/api/doctors');
+  if (response.ok) {
+    state.doctors = response.data;
+    populateSpecialtyFilter();
+    renderCalendar();
+    populateDoctorOptions();
+  }
 }
 
 async function loadRecords() {
-  const response = await fetch(`/api/patients/${state.patient.id}/records`);
-  const records = await response.json();
-  state.records = records;
   const recordsElement = document.getElementById('records');
-
-  if (!records.length) {
-    recordsElement.innerHTML = '<div class="empty-state">No medical records are available yet.</div>';
-    return;
+  recordsElement.setAttribute('aria-busy', 'true');
+  const response = await safeFetch(`/api/patients/${state.patient.id}/records`);
+  if (response.ok) {
+    state.records = response.data;
+    if (!state.records.length) {
+      recordsElement.innerHTML = '<div class="empty-state">No medical records are available yet.</div>';
+    } else {
+      recordsElement.innerHTML = state.records.map((record) => `
+        <div class="record-item">
+          <strong>${record.type}</strong>
+          <div class="small">${record.date}</div>
+          <p>${record.detail}</p>
+        </div>
+      `).join('');
+    }
   }
-
-  recordsElement.innerHTML = records.map((record) => `
-    <div class="record-item">
-      <strong>${record.type}</strong>
-      <div class="small">${record.date}</div>
-      <p>${record.detail}</p>
-    </div>
-  `).join('');
+  recordsElement.setAttribute('aria-busy', 'false');
 }
 
 async function loadAppointments() {
-  const response = await fetch(`/api/patients/${state.patient.id}/appointments`);
-  const appointments = await response.json();
-  state.patient.appointments = appointments;
   const appointmentsElement = document.getElementById('appointments');
-
-  if (!appointments.length) {
-    appointmentsElement.innerHTML = '<div class="empty-state">No appointments booked yet.</div>';
-    return;
+  appointmentsElement.setAttribute('aria-busy', 'true');
+  const response = await safeFetch(`/api/patients/${state.patient.id}/appointments`);
+  if (response.ok) {
+    state.patient.appointments = response.data;
+    if (!state.patient.appointments.length) {
+      appointmentsElement.innerHTML = '<div class="empty-state">No appointments booked yet.</div>';
+    } else {
+      appointmentsElement.innerHTML = state.patient.appointments.map((item) => `
+        <div class="appointment-item">
+          <strong>${item.doctor}</strong>
+          <div>${item.specialty}</div>
+          <div class="small">${item.date} at ${item.time}</div>
+          <div>Status: ${item.status}</div>
+        </div>
+      `).join('');
+    }
   }
-
-  appointmentsElement.innerHTML = appointments.map((item) => `
-    <div class="appointment-item">
-      <strong>${item.doctor}</strong>
-      <div>${item.specialty}</div>
-      <div class="small">${item.date} at ${item.time}</div>
-      <div>Status: ${item.status}</div>
-    </div>
-  `).join('');
+  appointmentsElement.setAttribute('aria-busy', 'false');
 }
 
 function renderProfile() {
@@ -186,12 +216,14 @@ function renderStats() {
 
 function renderCalendar() {
   const calendar = document.getElementById('calendar');
+  calendar.setAttribute('aria-busy', 'true');
   const filteredDoctors = state.specialty === 'all'
     ? state.doctors
     : state.doctors.filter((doctor) => doctor.specialty === state.specialty);
 
   if (!filteredDoctors.length) {
     calendar.innerHTML = '<div class="empty-state">No doctors match the current filter.</div>';
+    calendar.setAttribute('aria-busy', 'false');
     return;
   }
 
@@ -207,6 +239,20 @@ function renderCalendar() {
       `).join('')}
     </div>
   `).join('');
+  calendar.setAttribute('aria-busy', 'false');
+}
+// Fetch helper with error handling
+async function safeFetch(url, options) {
+  try {
+    const response = await fetch(url, options);
+    let data = null;
+    try {
+      data = await response.json();
+    } catch (e) {}
+    return { ok: response.ok, data };
+  } catch (err) {
+    return { ok: false, data: null };
+  }
 }
 
 function populateSpecialtyFilter() {
@@ -247,6 +293,7 @@ function handleLogout() {
   dashboard.classList.add('hidden');
   loginSection.classList.remove('hidden');
   loginForm.reset();
+  announce('You have been logged out.');
 }
 
 function setMessage(element, text, type = '') {

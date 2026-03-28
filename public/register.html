@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | Hospital Self-Service Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page-shell auth-page-shell">
+    <section class="auth-layout">
+      <section class="auth-intro" aria-label="Portal introduction">
+        <p class="eyebrow">Patient Services</p>
+        <h1>Create your patient account</h1>
+        <p class="subcopy">
+          Register to manage appointments, view doctor availability,
+          access your medical records, and keep your personal details up to date.
+        </p>
+
+        <div class="hero-badges">
+          <span class="badge">Online registration</span>
+          <span class="badge">Patient profile</span>
+          <span class="badge">Appointment booking</span>
+          <span class="badge">Secure login</span>
+        </div>
+      </section>
+
+      <section class="auth-card" aria-label="Patient registration form">
+        <div class="section-heading">
+          <p class="section-kicker">New account</p>
+          <h2>Register</h2>
+          <p>Complete the form below to create your patient account.</p>
+        </div>
+
+        <form id="registerForm" class="form-grid" novalidate>
+          <label for="name">
+            Full name
+            <input type="text" id="name" name="name" placeholder="Enter full name" required />
+          </label>
+
+          <label for="dob">
+            Date of birth
+            <input type="date" id="dob" name="dob" required />
+          </label>
+
+          <label for="nhsNumber">
+            NHS number
+            <input type="text" id="nhsNumber" name="nhsNumber" placeholder="Enter NHS number" required />
+          </label>
+
+          <label for="email">
+            Email address
+            <input type="email" id="email" name="email" placeholder="Enter email address" required />
+          </label>
+
+          <label for="phone">
+            Phone number
+            <input type="text" id="phone" name="phone" placeholder="Enter phone number" required />
+          </label>
+
+          <label for="address">
+            Home address
+            <input type="text" id="address" name="address" placeholder="Enter address" required />
+          </label>
+
+          <label for="emergencyContact">
+            Emergency contact
+            <input type="text" id="emergencyContact" name="emergencyContact" placeholder="Enter emergency contact" required />
+          </label>
+
+          <label for="username">
+            Username
+            <input type="text" id="username" name="username" placeholder="Choose a username" required />
+          </label>
+
+          <label for="password">
+            Password
+            <input type="password" id="password" name="password" placeholder="Choose a password" required />
+          </label>
+
+          <button type="submit" class="btn-primary">Create account</button>
+        </form>
+
+        <p id="registerMessage" class="message" aria-live="polite"></p>
+        <p class="auth-footer">
+          Already have an account?
+          <a href="/login.html">Sign in here</a>
+        </p>
+      </section>
+    </section>
+  </main>
+
+  <script src="register.js"></script>
+</body>
+</html>

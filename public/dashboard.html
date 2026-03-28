@@ -10,7 +10,15 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="hero slim-hero">
+  <!-- Skip link for accessibility -->
+  <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+  <!-- Theme toggle for light/dark mode -->
+  <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">🌙</button>
+
+  <!-- Visually hidden live region for important updates -->
+  <div id="liveRegion" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+  <header class="hero slim-hero" role="banner">
     <div class="hero-copy">
       <p class="eyebrow">Patient area</p>
       <h1 id="welcomeTitle">Patient dashboard</h1>
@@ -22,15 +30,16 @@
       </div>
     </div>
 
-    <aside class="status-card compact-status-card">
+    <aside class="status-card compact-status-card" aria-label="Dashboard summary">
       <h2>Dashboard summary</h2>
       <p class="small">This page combines the patient profile, appointment management, records, and live doctor availability in one place.</p>
       <button type="button" class="secondary-btn" id="logoutButton">Log out</button>
     </aside>
   </header>
 
-  <main class="container dashboard-page">
-    <section class="stats-grid">
+  <main class="container dashboard-page" id="mainContent" role="main">
+    <!-- Dashboard statistics -->
+    <section class="stats-grid" aria-label="Dashboard statistics">
       <article class="stat-card">
         <span class="stat-label">Upcoming appointments</span>
         <strong class="stat-value" id="appointmentCount">0</strong>
@@ -45,71 +54,68 @@
       </article>
     </section>
 
+    <!-- Profile and appointments -->
     <div class="grid two-col">
-      <section class="card">
+      <section class="card" aria-labelledby="profileHeading">
         <div class="section-heading">
           <div>
             <p class="section-kicker">Your details</p>
-            <h2>Patient profile</h2>
+            <h2 id="profileHeading">Patient profile</h2>
           </div>
         </div>
         <div id="profile"></div>
       </section>
 
-      <section class="card">
+      <section class="card" aria-labelledby="appointmentsHeading" aria-live="polite">
         <div class="section-heading">
           <div>
             <p class="section-kicker">Next visits</p>
-            <h2>Upcoming appointments</h2>
+            <h2 id="appointmentsHeading">Upcoming appointments</h2>
           </div>
         </div>
-        <div id="appointments"></div>
+        <div id="appointments" aria-busy="false"></div>
       </section>
     </div>
 
+    <!-- Records and booking -->
     <div class="grid two-col">
-      <section class="card">
+      <section class="card" aria-labelledby="recordsHeading" aria-live="polite">
         <div class="section-heading">
           <div>
             <p class="section-kicker">Health information</p>
-            <h2>Medical records</h2>
+            <h2 id="recordsHeading">Medical records</h2>
           </div>
         </div>
-        <div id="records"></div>
+        <div id="records" aria-busy="false"></div>
       </section>
 
-      <section class="card">
+      <section class="card" aria-labelledby="bookingHeading">
         <div class="section-heading">
           <div>
             <p class="section-kicker">Self-service booking</p>
-            <h2>Book an appointment</h2>
+            <h2 id="bookingHeading">Book an appointment</h2>
           </div>
         </div>
 
         <form id="bookingForm" class="form-grid">
-          <label>
-            Doctor
-            <select id="doctorSelect" required></select>
-          </label>
-          <label>
-            Date
-            <select id="dateSelect" required></select>
-          </label>
-          <label>
-            Time slot
-            <select id="timeSelect" required></select>
-          </label>
+          <label for="doctorSelect">Doctor</label>
+          <select id="doctorSelect" required aria-required="true"></select>
+          <label for="dateSelect">Date</label>
+          <select id="dateSelect" required aria-required="true"></select>
+          <label for="timeSelect">Time slot</label>
+          <select id="timeSelect" required aria-required="true"></select>
           <button type="submit">Book appointment</button>
         </form>
         <p id="bookingMessage" class="message" aria-live="polite"></p>
       </section>
     </div>
 
-    <section class="card">
+    <!-- Doctor availability calendar -->
+    <section class="card" aria-labelledby="calendarHeading" aria-live="polite">
       <div class="section-heading split-heading">
         <div>
           <p class="section-kicker">Live schedule</p>
-          <h2>Doctor availability calendar</h2>
+          <h2 id="calendarHeading">Doctor availability calendar</h2>
         </div>
         <label class="filter-wrap">
           Filter by speciality
@@ -118,10 +124,47 @@
           </select>
         </label>
       </div>
-      <div id="calendar" class="calendar-grid"></div>
+      <div id="calendar" class="calendar-grid" aria-busy="false"></div>
     </section>
   </main>
 
-  <script src="dashboard.js"></script>
+  <!-- Loading spinner for async content -->
+  <div id="loadingSpinner" class="spinner" hidden aria-hidden="true" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+
+  <!-- Defer script for better performance -->
+  <script src="dashboard.js" defer></script>
+  <script>
+    // Theme toggle logic
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const dark = document.body.classList.toggle('dark-mode');
+      themeToggle.setAttribute('aria-pressed', dark);
+      themeToggle.textContent = dark ? '☀️' : '🌙';
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    });
+    // Load theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+      themeToggle.setAttribute('aria-pressed', 'true');
+      themeToggle.textContent = '☀️';
+    }
+    // Focus style improvement
+    document.body.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') document.body.classList.add('user-is-tabbing');
+    });
+    // Spinner utility
+    window.showSpinner = function(show = true) {
+      const spinner = document.getElementById('loadingSpinner');
+      spinner.hidden = !show;
+      spinner.setAttribute('aria-hidden', !show);
+    };
+    // Live region utility
+    window.announce = function(msg) {
+      const region = document.getElementById('liveRegion');
+      region.textContent = msg;
+    };
+  </script>
 </body>
 </html>
